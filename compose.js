@@ -1,7 +1,3 @@
-/*TODO: 
-Request both components (templates) and texts simultaneously
-once no components are unloaded and texts are loaded --> populate texts
-*/
 (function() {
 const pageName = window.location.pathname.split('/').pop().split('.html').join('') || 'index'; 
 const contentFileName = `${pageName}.json`;
@@ -10,8 +6,16 @@ const componentsPath = 'components';
 const contentPath = 'content';
 const fileNameAttributeName = 'src';
 const componentRegexQuery = /<\/component>|<component(.*?)>/g;
+const replacements = [
+  ['$src', 'src'],
+  [/<\/component>|<component(.*?)>/g, '']
+];
 
 let pendingFetches = 0;
+  
+const applyReplacements = str => {
+  return replacements.reduce((html, replacement) => html.replace(replacement[0], replacement[1]), str);
+};
 
 const handleErrors = res => {
   !res.ok && console.log(res.statusText)
@@ -27,7 +31,7 @@ const setupDependencies = () => {
   
 const populateContent = () => {
   const source = document.body.innerHTML;
-  const filteredSource = source.replace(componentRegexQuery, () => '');
+  const filteredSource = applyReplacements(source);
   const template = Handlebars.compile(filteredSource);
   fetch(`${contentPath}/${contentFileName}`)
       .then(handleErrors)
@@ -36,7 +40,7 @@ const populateContent = () => {
         const html = template(content);
         document.body.innerHTML = html;
       })
-}
+};
   
 const composeHtml = () => {
   const query = `${tagName}[${fileNameAttributeName}]`;

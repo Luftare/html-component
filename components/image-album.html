@@ -1,8 +1,18 @@
-<div>
+<div class="image-album">
   {{#each albums}}
-    <img src="{{src}}" />
+    <img $src="{{src}}" />
   {{/each}}
 </div>
 <style>
-
+  .image-album {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-gap: var(--gutter-s);
+    padding: var(--gutter-s) var(--gutter-s);
+    background: var(--color-black);
+  }
+  
+  .image-album img {
+    max-width: 100%;
+  }
 </style>
