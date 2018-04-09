@@ -1,0 +1,25 @@
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+  --color-red: #F77;
+  --color-green: #7F7;
+  --color-gray: #555;
+  --color-light-gray: #EEE;
+  --color-black: #111;
+  --color-white: #FFF;
+  
+  --gutter-xs: 4px;
+  --gutter-s: 8px;
+  --gutter-m: 16px;
+  --gutter-l: 32px;
+  --gutter-page: 16px;
+}
+
+@media (min-width: 600px) {
+  :root {
+    --gutter-page: 15%;
+  }
+}
