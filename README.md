@@ -17,3 +17,4 @@ Challenge some of the best-practises such as:
 - page should be reactive
 
 ## Not impressed... How do you even use it?
+(Clone the repo and host it as it is)
