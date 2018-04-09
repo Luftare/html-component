@@ -1,12 +1,22 @@
 /*TODO: 
 Request both components (templates) and texts simultaneously
 once no components are unloaded and texts are loaded --> populate texts
-
 */
 (function() {
-const pageName = window.location.pathname.split('/').pop().split('.html').join(''); 
-const contentPath = 'content';
+const pageName = window.location.pathname.split('/').pop().split('.html').join('') || 'index'; 
 const contentFileName = `${pageName}.json`;
+const tagName = 'component';
+const componentsPath = 'components';
+const contentPath = 'content';
+const fileNameAttributeName = 'src';
+const componentRegexQuery = /<\/component>|<component(.*?)>/g;
+
+let pendingFetches = 0;
+
+const handleErrors = res => {
+  !res.ok && console.log(res.statusText)
+  return res;
+};
 
 const setupDependencies = () => {
   const scriptElement = document.createElement('script');
@@ -16,25 +26,19 @@ const setupDependencies = () => {
 };
   
 const populateContent = () => {
-  const regexQuery = /<\/block>|<block(.*?)>/g;
   const source = document.body.innerHTML;
-  const filteredSource = source.replace(regexQuery, () => '');
+  const filteredSource = source.replace(componentRegexQuery, () => '');
   const template = Handlebars.compile(filteredSource);
   fetch(`${contentPath}/${contentFileName}`)
+      .then(handleErrors)
       .then(data => data.json())
       .then(content => {
         const html = template(content);
         document.body.innerHTML = html;
       })
-      .catch(err => console.log(err))
 }
   
-let pendingFetches = 0;
-  
 const composeHtml = () => {
-  const fileNameAttributeName = 'src';
-  const tagName = 'block';
-  const componentsPath = 'components';
   const query = `${tagName}[${fileNameAttributeName}]`;
   const elements = document.querySelectorAll(query);
   

@@ -1,4 +1,12 @@
 {
   "title": "Index stuff...",
-  "text": "Yo some body text here...."
+  "text": "Yo some body text here....",
+  "albums": [
+    {
+      "src": "http://lorempizza.com/380/240"
+    },
+    { 
+      "src": "http://lorempizza.com/300/200"
+    }
+  ]
 }
