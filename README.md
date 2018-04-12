@@ -18,6 +18,3 @@ Challenge some of the best-practises such as:
 
 ## Not impressed... How do you even use it?
 (Clone the repo and host it as it is)
-### todo...
-- Enable nesting of components i.e wrapper components
---> possible implementation: remporary tags for content before and after [#children], and for the actual nested content
