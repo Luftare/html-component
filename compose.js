@@ -1,4 +1,5 @@
 (function() {
+const BODY_DISPLAY_STYLE = 'block';
 const pageName = window.location.pathname.split('/').pop().split('.html').join('') || 'index'; 
 const contentFileName = `${pageName}.json`;
 const tagName = 'component';
@@ -8,13 +9,29 @@ const fileNameAttributeName = 'src';
 const componentRegexQuery = /<\/component>|<component(.*?)>/g;
 const replacements = [
   ['$src', 'src'],
-  [/<\/component>|<component(.*?)>/g, '']
+  [/<\/component>|<component(.*?)>/g, ''],
+  ['[#children]', ''],
+  ['&lt;', '<'],
+  ['&gt;', '>']
 ];
 
 let pendingFetches = 0;
   
+const boot = () => {
+  hideBody();
+  setupDependencies();
+};
+  
+const hideBody = () => {
+  document.body.style.display = 'none';
+};
+  
+const showBody = () => {
+  document.body.style.display = BODY_DISPLAY_STYLE;
+}
+
 const applyReplacements = str => {
-  return replacements.reduce((html, replacement) => html.replace(replacement[0], replacement[1]), str);
+  return replacements.reduce((html, replacement) => html.split(replacement[0]).join(replacement[1]), str);
 };
 
 const handleErrors = res => {
@@ -39,6 +56,7 @@ const populateContent = () => {
       .then(content => {
         const html = template(content);
         document.body.innerHTML = html;
+        showBody();
       })
 };
   
@@ -55,12 +73,22 @@ const composeHtml = () => {
       .then(data => data.text())
       .then(component => {
         pendingFetches--;
-        element.innerHTML = component;
+        const hasNestedElements = element.innerHTML.length > 0;
+        const templateHasArea = component.includes('[#children]');
+        if(hasNestedElements && templateHasArea) {
+          const index = component.indexOf('[#children]');
+          const start = component.substring(0, index);
+          const end = component.substring(index, component.length); 
+          element.prepend(start);
+          element.append(end);
+        } else {
+          element.innerHTML = component;
+        }
         composeHtml();
       });
   }
   if(pendingFetches === 0) populateContent();
 };
 
-setupDependencies();
+boot();
 })();

@@ -1,0 +1,31 @@
+<div class="navigation">
+  <a class="navigation__link" href="index.html">
+    Home
+  </a>
+  <a class="navigation__link" href="about.html">
+    About
+  </a>
+  <a class="navigation__link" href="contact.html">
+    Contact
+  </a>
+</div>
+<style>
+  .navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  
+  .navigation__link {
+    text-align: center;
+    text-decoration: none;
+    min-width: 100px;
+    padding: var(--gutter-xs);
+    color: var(--color-red);
+    background: var(--color-gray);
+  }
+  
+  .navigation__link:hover {
+    background: var(--color-black);
+  }
+</style>
