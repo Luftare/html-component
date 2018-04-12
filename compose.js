@@ -16,11 +16,7 @@ const replacements = [
 ];
 
 let pendingFetches = 0;
-  
-const cachedFetch = (url) => {
-  return fetch(url);
-};
-  
+
 const hydrateScripts = () => {
   const scriptTags = document.querySelectorAll('script');
   for(let i = 0; i < scriptTags.length; i++) {
@@ -65,11 +61,6 @@ const applyReplacements = str => {
   return replacements.reduce((html, replacement) => html.split(replacement[0]).join(replacement[1]), str);
 };
 
-const handleErrors = res => {
-  !res.ok && console.log(res.statusText)
-  return res;
-};
-
 const setupDependencies = () => {
   const scriptElement = document.createElement('script');
   scriptElement.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js');
@@ -81,8 +72,7 @@ const populateContent = () => {
   const source = document.body.innerHTML;
   const filteredSource = applyReplacements(source);
   const template = Handlebars.compile(filteredSource);
-  cachedFetch(`${contentPath}/${contentFileName}`)
-      .then(handleErrors)
+  fetch(`${contentPath}/${contentFileName}`)     
       .then(data => data.json())
       .then(content => {
         const html = template(content);
@@ -100,7 +90,7 @@ const composeHtml = () => {
     const componentFileName = element.getAttribute(fileNameAttributeName);
     element.removeAttribute(fileNameAttributeName);
     pendingFetches++;
-    cachedFetch(`${componentsPath}/${componentFileName}`)
+    fetch(`${componentsPath}/${componentFileName}`)
       .then(data => data.text())
       .then(component => {
         pendingFetches--;
