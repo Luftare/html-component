@@ -1,6 +1,7 @@
 {
   "title": "Index stuff...",
   "text": "Yo some body text here....",
+  "albumTitle": "Kato kuvia!",
   "albums": [
     { "src": "http://lorempizza.com/300/200" },
     { "src": "http://lorempizza.com/300/200" },
@@ -8,5 +9,15 @@
     { "src": "http://lorempizza.com/300/200" },
     { "src": "http://lorempizza.com/300/200" },
     { "src": "http://lorempizza.com/300/200" }
+  ],
+  "posts": [
+    {
+      "title": "Eka postaus",
+      "text": "Täs on tekxstii"
+    },
+    {
+      "title": "Toka postaus",
+      "text": "Täs on toisen postauxen tekxstii"
+    }
   ]
 }

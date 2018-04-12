@@ -17,17 +17,48 @@ const replacements = [
 
 let pendingFetches = 0;
   
+const cachedFetch = (url) => {
+  return fetch(url);
+};
+  
+const hydrateScripts = () => {
+  const scriptTags = document.querySelectorAll('script');
+  for(let i = 0; i < scriptTags.length; i++) {
+    const inactiveScriptNode = scriptTags[i];
+    if(inactiveScriptNode.text.length > 0) {
+      const scriptNode = document.createElement('script');
+      scriptNode.text = inactiveScriptNode.innerHTML;
+      inactiveScriptNode.parentNode.removeChild(inactiveScriptNode);
+      document.body.appendChild(scriptNode);
+    }
+  }
+};
+  
 const boot = () => {
   hideBody();
   setupDependencies();
 };
   
+const requestOnReady = () => {
+  const allComponentsPopulated = !document.querySelector('component');
+  if(allComponentsPopulated) {
+    onReady();
+  } else {
+    composeHtml();    
+  }
+};
+  
+const onReady = () => {
+  showBody();
+  hydrateScripts();
+}; 
+
 const hideBody = () => {
   document.body.style.display = 'none';
 };
   
 const showBody = () => {
-  document.body.style.display = BODY_DISPLAY_STYLE;
+  document.body.style.removeProperty('display');
 }
 
 const applyReplacements = str => {
@@ -50,13 +81,13 @@ const populateContent = () => {
   const source = document.body.innerHTML;
   const filteredSource = applyReplacements(source);
   const template = Handlebars.compile(filteredSource);
-  fetch(`${contentPath}/${contentFileName}`)
+  cachedFetch(`${contentPath}/${contentFileName}`)
       .then(handleErrors)
       .then(data => data.json())
       .then(content => {
         const html = template(content);
         document.body.innerHTML = html;
-        showBody();
+        requestOnReady();
       })
 };
   
@@ -69,7 +100,7 @@ const composeHtml = () => {
     const componentFileName = element.getAttribute(fileNameAttributeName);
     element.removeAttribute(fileNameAttributeName);
     pendingFetches++;
-    fetch(`${componentsPath}/${componentFileName}`)
+    cachedFetch(`${componentsPath}/${componentFileName}`)
       .then(data => data.text())
       .then(component => {
         pendingFetches--;
@@ -89,6 +120,6 @@ const composeHtml = () => {
   }
   if(pendingFetches === 0) populateContent();
 };
-
+  
 boot();
 })();
