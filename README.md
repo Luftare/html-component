@@ -1,5 +1,5 @@
 # html-component
-Compose static website from components.
+Compose static website from html components.
 
 ## What's the point?
 - get most out of HTML, CSS and JS
@@ -14,7 +14,8 @@ Challenge some of the best-practises such as:
 - http request count should be optimized
 - page load time should be minimized
 - SEO should be considered
-- page should be reactive
+- page should be reactive¨
+- No style tags inside body
 
 ## Not impressed... How do you even use it?
 (Clone the repo and host it as it is)
